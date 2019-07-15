@@ -37,6 +37,7 @@ namespace DiscoCar
                 })
                 .WithSetter((value) => {
                     Config["DiscoFlames"] = value;
+                    Config.Save();
                 }),
 
                 new CheckBox(MenuDisplayMode.Both, "discocar.main.overheat", "DISCO OVERHEAT")
@@ -45,39 +46,43 @@ namespace DiscoCar
                 })
                 .WithSetter((value) => {
                     Config["DiscoOverheat"] = value;
+                    Config.Save();
                 })
             });
 
-            HarmonyInstance.Create("com.reherc.discocar").PatchAll(Assembly.GetExecutingAssembly());
+            HarmonyInstance harmony = HarmonyInstance.Create("com.reherc.discocar");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
-        [HarmonyPatch(typeof(BackLightsWidget), "SetVisual", new System.Type[] { typeof(float), typeof(Color) })]
-        [HarmonyPatch(typeof(BackLightsWidget), "SetVisual", new System.Type[] { typeof(float), typeof(float), typeof(Color) })]
-        public class BackLightsWidgetSetVisual
-        {
-            static void Postfix(BackLightsWidget __instance)
-            {
-                if (Config["DiscoOverheat"] is false) return;
+        
+    }
 
-                Color color = new Color(Random.value, Random.value, Random.value, 1);
-                __instance.backLightMat_.SetColor("_Color", color);
-                __instance.backLightMat_.SetColor("_Color2", color);
-            }
+    [HarmonyPatch(typeof(BackLightsWidget), "SetVisual", new System.Type[] { typeof(float), typeof(Color) })]
+    [HarmonyPatch(typeof(BackLightsWidget), "SetVisual", new System.Type[] { typeof(float), typeof(float), typeof(Color) })]
+    public class BackLightsWidgetSetVisual
+    {
+        static void Postfix(BackLightsWidget __instance)
+        {
+            if (!Entry.Config.GetItem<bool>("DiscoOverheat")) return;
+
+            Color color = new Color(Random.value, Random.value, Random.value, 1);
+            __instance.backLightMat_.SetColor("_Color", color);
+            __instance.backLightMat_.SetColor("_Color2", color);
         }
+    }
 
-        [HarmonyPatch(typeof(JetFlame), "UpdateMaterialProperties")]
-        public class JetFlameUpdateMaterialProperties
+    [HarmonyPatch(typeof(JetFlame), "UpdateMaterialProperties")]
+    public class JetFlameUpdateMaterialProperties
+    {
+        static void Postfix(JetFlame __instance)
         {
-            static void Postfix(JetFlame __instance)
-            {
-                if (Config["DiscoFlames"] is false) return;
+            if (!Entry.Config.GetItem<bool>("DiscoFlames")) return;
 
-                Color color = new Color(Random.value, Random.value, Random.value, 1);
+            Color color = new Color(Random.value, Random.value, Random.value, 1);
 
-                __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor1_, color);
-                __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor2_, color);
-                __instance.renderer_.SetPropertyBlock(__instance.propertyBlock_);
-            }
+            __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor1_, color);
+            __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor2_, color);
+            __instance.renderer_.SetPropertyBlock(__instance.propertyBlock_);
         }
     }
 }
