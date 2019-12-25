@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace DiscoCar
 {
-    public class Entry : IPlugin
+    public class Entry : IPlugin, IUpdatable
     {
         public static Settings Config;
 
@@ -54,7 +54,18 @@ namespace DiscoCar
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
-        
+        public void Update()
+        {
+            var mats = UnityEngine.Object.FindObjectsOfType<Material>();
+            foreach(var mat in mats)
+            {
+                foreach(var name in MaterialEx.supportedColors_)
+                {
+                    Color c = new Color(Random.value, Random.value, Random.value);
+                    mat.SetColor(name, c);
+                }
+            }
+        }
     }
 
     [HarmonyPatch(typeof(BackLightsWidget), "SetVisual", new System.Type[] { typeof(float), typeof(Color) })]
@@ -83,6 +94,36 @@ namespace DiscoCar
             __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor1_, color);
             __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor2_, color);
             __instance.renderer_.SetPropertyBlock(__instance.propertyBlock_);
+        }
+    }
+
+    [HarmonyPatch(typeof(CarLogic), "Update")]
+    public class CarLogicUpdate
+    {
+        static void Postfix(CarLogic __instance)
+        {
+            var comps = __instance.GetComponentsInChildren<ColorChanger>();
+
+            foreach (var comp in comps)
+            {
+                foreach (var r in comp.rendererChangers_)
+                {
+                    List<Color> colors = new List<Color>();
+                    for (int i = 0; i < (int)(ColorChanger.ColorType.Size_); i++)
+                        colors.Add(new Color(Random.value, Random.value, Random.value));
+
+                    r.SetColors(colors, 0xFFFFFFFF);
+
+                    foreach (var u in r.uniformChangers_)
+                    {
+                        colors.Clear();
+                        for (int i = 0; i < (int)(ColorChanger.ColorType.Size_); i++)
+                            colors.Add(new Color(Random.value, Random.value, Random.value));
+                        u.SetColor(r.materials_[u.materialIndex_], colors, 0xFFFFFFFF);
+                    }
+
+                }
+            }
         }
     }
 }
