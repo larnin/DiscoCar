@@ -6,28 +6,44 @@ using Random = UnityEngine.Random;
 
 namespace DiscoCar
 {
-    [HarmonyPatch(typeof(BackLightsWidget), "SetVisual", new System.Type[] { typeof(float), typeof(Color) })]
-    [HarmonyPatch(typeof(BackLightsWidget), "SetVisual", new System.Type[] { typeof(float), typeof(float), typeof(Color) })]
-    public class BackLightsWidgetSetVisual
+    [HarmonyPatch(typeof(BackLightsWidget), "Start", new System.Type[] { typeof(float), typeof(Color) })]
+    public class BackLightsWidgetStart
     {
         static void Postfix(BackLightsWidget __instance)
         {
-            if (!Entry.options.discoOverheat)
+            if (Entry.options.targetType != TargetType.Flames)
                 return;
 
+            TargetFlames target = Entry.target as TargetFlames;
+            if (target == null)
+                return;
+
+            target.AddMaterial(__instance.backLightMat_, (Material mat, Color value) => { mat.SetColor("_Color", value); }, "_Color");
+            target.AddMaterial(__instance.backLightMat_, (Material mat, Color value) => { mat.SetColor("_Color2", value); }, "_Color2");
+        }
+    }
+
+    [HarmonyPatch(typeof(JetFlame), "Awake")]
+    public class JetFlameAwake
+    {
+        static bool Prefix(JetFlame __instance)
+        {
+            return Entry.options.targetType != TargetType.Flames;
+
             Color color = new Color(Random.value, Random.value, Random.value, 1);
-            __instance.backLightMat_.SetColor("_Color", color);
-            __instance.backLightMat_.SetColor("_Color2", color);
+
+            __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor1_, color);
+            __instance.propertyBlock_.SetColor(JetFlame.id_EmitColor2_, color);
+            __instance.renderer_.SetPropertyBlock(__instance.propertyBlock_);
         }
     }
 
     [HarmonyPatch(typeof(JetFlame), "UpdateMaterialProperties")]
     public class JetFlameUpdateMaterialProperties
     {
-        static void Postfix(JetFlame __instance)
+        static bool Prefix(JetFlame __instance)
         {
-            if (!Entry.options.discoFlames)
-                return;
+            return Entry.options.targetType != TargetType.Flames;
 
             Color color = new Color(Random.value, Random.value, Random.value, 1);
 

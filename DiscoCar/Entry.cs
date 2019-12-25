@@ -10,6 +10,9 @@ namespace DiscoCar
     {
         static public PluginOptions options{get; private set;}
 
+        static public TargetBase target { get; private set; }
+        static public EffectBase effect { get; private set; }
+
         public void Initialize(IManager manager, string ipcIdentifier)
         {
             options = new PluginOptions(manager);
@@ -30,6 +33,15 @@ namespace DiscoCar
                 }
             }
         }
-    }
 
+        public static void UpdateCurrentTarget()
+        {
+            target = TargetBase.MakeTarget(options.targetType);
+        }
+
+        public static void UpdateCurrentEffect()
+        {
+            effect = EffectBase.MakeEffect(options.effectType);
+        }
+    }
 }
