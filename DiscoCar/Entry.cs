@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Spectrum.API.Configuration;
 using Spectrum.API.GUI.Controls;
 using Spectrum.API.GUI.Data;
@@ -50,7 +50,7 @@ namespace DiscoCar
                 })
             });
 
-            HarmonyInstance harmony = HarmonyInstance.Create("com.reherc.discocar");
+            Harmony harmony = new Harmony("com.reherc.discocar");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
