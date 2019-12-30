@@ -16,6 +16,7 @@ namespace DiscoCar
                 case EffectType.Random:
                     return new EffectRandom();
                 case EffectType.Gradient:
+                    return new EffectRainbow();
                 case EffectType.RandomGradient:
                     break;
                 default:

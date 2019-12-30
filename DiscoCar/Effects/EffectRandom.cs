@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace DiscoCar
 {
-    class EffectRandom : EffectBase
+    public class EffectRandom : EffectBase
     {
         int m_currentChangeNb = 0;
         int m_lastChangeNb = 0;
