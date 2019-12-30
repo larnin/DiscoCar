@@ -19,19 +19,17 @@ namespace DiscoCar
             
             Harmony harmony = new Harmony("com.reherc.discocar");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+            UpdateCurrentEffect();
+            UpdateCurrentTarget();
         }
 
         public void Update()
         {
-            var mats = UnityEngine.Object.FindObjectsOfType<Material>();
-            foreach(var mat in mats)
-            {
-                foreach(var name in MaterialEx.supportedColors_)
-                {
-                    Color c = new Color(Random.value, Random.value, Random.value);
-                    mat.SetColor(name, c);
-                }
-            }
+            if (target != null)
+                target.Update(Time.deltaTime);
+            if(effect != null)
+                effect.Clean();
         }
 
         public static void UpdateCurrentTarget()

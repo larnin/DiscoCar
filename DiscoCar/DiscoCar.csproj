@@ -57,11 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Effects\EffectBase.cs" />
+    <Compile Include="Effects\EffectRandom.cs" />
     <Compile Include="Targets\TargetBase.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="HarmonyPatchs.cs" />
     <Compile Include="PluginOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Targets\TargetCar.cs" />
+    <Compile Include="Targets\TargetEverything.cs" />
     <Compile Include="Targets\TargetFlames.cs" />
   </ItemGroup>
   <ItemGroup>

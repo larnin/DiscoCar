@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Object = System.Object;
 
 namespace DiscoCar
 {
@@ -10,9 +11,9 @@ namespace DiscoCar
     {
         public class MaterialInfo
         {
-            public UnityEngine.Object obj;
+            public Object obj;
             public string customID;
-            public Action<Material, Color> setter;
+            public Action<Object, Color> setter;
         }
 
         const float m_timerMaxTime = 1.0f;
@@ -25,11 +26,14 @@ namespace DiscoCar
                 case TargetType.None:
                     return null;
                 case TargetType.Flames:
-                    throw new NotImplementedException();
+                    return new TargetFlames();
                 case TargetType.Car:
-                    throw new NotImplementedException();
+                    return new TargetCar();
                 case TargetType.Everything:
-                    throw new NotImplementedException();
+                    return new TargetEverything();
+                default:
+                    Console.Out.WriteLine("Invalid target type");
+                    break;
             }
 
             return null;
@@ -45,6 +49,9 @@ namespace DiscoCar
             }
 
             CleanMaterials();
+
+            if(Entry.effect != null)
+                UpdateEffect();
         }
 
         protected void CleanMaterials(List<MaterialInfo> materials)
@@ -65,6 +72,6 @@ namespace DiscoCar
 
         public abstract void UpdateMaterials();
         protected abstract void CleanMaterials();
-        public abstract List<MaterialInfo> GetMaterials();
+        public abstract void UpdateEffect();
     }
 }

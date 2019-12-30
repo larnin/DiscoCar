@@ -23,7 +23,6 @@ namespace DiscoCar
 
     public class PluginOptions
     {
-
         Settings m_config;
 
         public PluginOptions(IManager manager)
@@ -34,8 +33,8 @@ namespace DiscoCar
             {
                 {"DiscoFlames", false },
                 {"DiscoOverheat", false },
-                {"EffectType", EffectType.Gradient },
-                {"TargetType", TargetType.Flames },
+                {"EffectType", (int)EffectType.Gradient },
+                {"TargetType", (int)TargetType.Flames },
                 {"EffectSpeed", 1 }
             };
             foreach (var item in defaultConfig)
@@ -54,23 +53,43 @@ namespace DiscoCar
 
         void CreateMenus(IManager manager)
         {
-
             manager.Menus.AddMenu(MenuDisplayMode.Both, new MenuTree("discocar.main", "DISCO CAR [FF0000](SEIZURE WARNING !)[-]")
         {
-            new CheckBox(MenuDisplayMode.Both, "discocar.main.flames", "DISCO FLAMES")
-            .WithGetter(() => {
-                return discoFlames;
+            new ListBox<TargetType>(MenuDisplayMode.Both, "discocar.main.target", "DISCO TARGET")
+            .WithEntries(new Dictionary<string, TargetType>
+                {
+                    {"None", TargetType.None },
+                    {"Flames", TargetType.Flames },
+                    {"Car", TargetType.Car },
+                    {"EVERYTHING !!!", TargetType.Everything }
+                })
+            .WithGetter(()=> {
+                return targetType;
             })
-            .WithSetter((value) => {
-                discoFlames = value;
+            .WithSetter((value) =>{
+                targetType = value;
             }),
 
-            new CheckBox(MenuDisplayMode.Both, "discocar.main.overheat", "DISCO OVERHEAT")
-            .WithGetter(() => {
-                return discoOverheat;
+            new ListBox<EffectType>(MenuDisplayMode.Both, "discocar.main.effect", "DISCO EFFECT")
+            .WithEntries(new Dictionary<string, EffectType>
+                {
+                    {"Random", EffectType.Random },
+                    {"Gradient", EffectType.Gradient },
+                    {"Randomized gradient", EffectType.RandomGradient },
+                })
+            .WithGetter(()=> {
+                return effectType;
+            })
+            .WithSetter((value) =>{
+                effectType = value;
+            }),
+
+            new FloatSlider(MenuDisplayMode.Both, "discocar.main.speed", "DISCO SPEED")
+            .WithGetter(()=>{
+                return effectSpeed;
             })
             .WithSetter((value) => {
-                discoOverheat = value;
+                effectSpeed = value;
             })
         });
         }
@@ -105,11 +124,11 @@ namespace DiscoCar
         {
             get
             {
-                return m_config.GetItem<EffectType>("EffectType");
+                return (EffectType)m_config.GetItem<int>("EffectType");
             }
             set
             {
-                m_config["EffectType"] = value;
+                m_config["EffectType"] = (int)value;
                 m_config.Save();
 
                 Entry.UpdateCurrentEffect();
@@ -120,11 +139,11 @@ namespace DiscoCar
         {
             get
             {
-                return m_config.GetItem<TargetType>("TargetType");
+                return (TargetType)m_config.GetItem<int>("TargetType");
             }
             set
             {
-                m_config["TargetType"] = value;
+                m_config["TargetType"] = (int)value;
                 m_config.Save();
 
                 Entry.UpdateCurrentTarget();
