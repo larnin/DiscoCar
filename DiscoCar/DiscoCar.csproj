@@ -59,6 +59,7 @@
     <Compile Include="Effects\EffectBase.cs" />
     <Compile Include="Effects\EffectRainbow.cs" />
     <Compile Include="Effects\EffectRandom.cs" />
+    <Compile Include="MaterialList.cs" />
     <Compile Include="Targets\TargetBase.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="HarmonyPatchs.cs" />

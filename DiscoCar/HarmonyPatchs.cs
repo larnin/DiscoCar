@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Random = UnityEngine.Random;
 using Object = System.Object;
+using System;
 
 namespace DiscoCar
 {
@@ -88,4 +89,34 @@ namespace DiscoCar
     //        }
     //    }
     //}
+
+    [HarmonyPatch(typeof(Material), MethodType.Constructor)]
+    [HarmonyPatch(new[] { typeof(string) })]
+    class MaterialCtorString
+    {
+        static void Postfix(Material __instance)
+        {
+            MaterialList.instance.Add(__instance);
+        }
+    }
+
+    [HarmonyPatch(typeof(Material), MethodType.Constructor)]
+    [HarmonyPatch(new[] { typeof(Shader) })]
+    class MaterialCtorShader
+    {
+        static void Postfix(Material __instance)
+        {
+            MaterialList.instance.Add(__instance);
+        }
+    }
+
+    [HarmonyPatch(typeof(Material), MethodType.Constructor)]
+    [HarmonyPatch(new[] { typeof(Material) })]
+    class MaterialCtorMaterial
+    {
+        static void Postfix(Material __instance)
+        {
+            MaterialList.instance.Add(__instance);
+        }
+    }
 }

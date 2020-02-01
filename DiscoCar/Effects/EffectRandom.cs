@@ -39,5 +39,36 @@ namespace DiscoCar
                 m_currentChangeNb++;
             }
         }
+
+        List<Material> m_materials = new List<Material>();
+
+        public override void Update()
+        {
+            foreach (var m in m_materials)
+            {
+                if (m == null)
+                    continue;
+
+                foreach (var p in m_properties)
+                {
+                    if(m.HasProperty(p))
+                    {
+                        var color = new Color(Random.value, Random.value, Random.value);
+                        m.SetColor(p, color);
+                    }
+                }
+            }
+        }
+
+        public override void UpdateMaterials(List<Material> materials)
+        {
+            m_materials.Clear();
+
+            foreach(var m in materials)
+            {
+                if (m != null)
+                    m_materials.Add(m);
+            }
+        }
     }
 }

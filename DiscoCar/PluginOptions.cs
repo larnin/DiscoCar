@@ -35,7 +35,8 @@ namespace DiscoCar
                 {"DiscoOverheat", false },
                 {"EffectType", (int)EffectType.Gradient },
                 {"TargetType", (int)TargetType.Flames },
-                {"EffectSpeed", 1 }
+                {"EffectSpeed", 1 },
+                {"EnableLogs", false }
             };
             foreach (var item in defaultConfig)
             {
@@ -160,6 +161,14 @@ namespace DiscoCar
             {
                 m_config["EffectSpeed"] = value;
                 m_config.Save();
+            }
+        }
+
+        public bool enableLogs
+        {
+            get
+            {
+                return m_config.GetItem<bool>("EnableLogs");
             }
         }
     }

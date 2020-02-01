@@ -77,5 +77,10 @@ namespace DiscoCar
 
             m_materials.Add(mat);
         }
+
+        public override bool ValidateRenderer(Renderer r)
+        {
+            return false;
+        }
     }
 }

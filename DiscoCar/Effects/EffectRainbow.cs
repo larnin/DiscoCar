@@ -47,5 +47,15 @@ namespace DiscoCar
                 m.setter(m.obj, Color.HSVToRGB(target.value, 1, 1));
             }
         }
+
+        public override void UpdateMaterials(List<Material> materials)
+        {
+
+        }
+
+        public override void Update()
+        {
+
+        }
     }
 }

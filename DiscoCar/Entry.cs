@@ -21,7 +21,6 @@ namespace DiscoCar
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             UpdateCurrentEffect();
-            UpdateCurrentTarget();
         }
 
         public void Update()
@@ -30,16 +29,22 @@ namespace DiscoCar
                 target.Update(Time.deltaTime);
             if(effect != null)
                 effect.Clean();
+
+            if (EffectBase.instance != null)
+                EffectBase.instance.Update();
+
+            MaterialList.instance.Update();
         }
 
         public static void UpdateCurrentTarget()
         {
-            target = TargetBase.MakeTarget(options.targetType);
+            //target = TargetBase.MakeTarget(options.targetType);
         }
 
         public static void UpdateCurrentEffect()
         {
-            effect = EffectBase.MakeEffect(options.effectType);
+            EffectBase.UpdateEffect(options.effectType);
+            //effect = EffectBase.MakeEffect(options.effectType);
         }
     }
 }

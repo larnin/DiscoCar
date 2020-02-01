@@ -42,5 +42,10 @@ namespace DiscoCar
         {
 
         }
+
+        public override bool ValidateRenderer(Renderer r)
+        {
+            return false;
+        }
     }
 }

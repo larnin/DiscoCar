@@ -9,6 +9,36 @@ namespace DiscoCar
 {
     public abstract class TargetBase
     {
+        static TargetBase m_instance = null;
+        public static TargetBase instance
+        {
+            get { return m_instance; }
+            private set { m_instance = value; }
+        }
+
+        public static void ChangeTarget(TargetType type)
+        {
+            switch (type)
+            {
+                case TargetType.None:
+                    instance = null;
+                    break;
+                case TargetType.Flames:
+                    instance = new TargetFlames();
+                    break;
+                case TargetType.Car:
+                    instance = new TargetCar();
+                    break;
+                case TargetType.Everything:
+                    instance = new TargetEverything();
+                    break;
+                default:
+                    instance = null;
+                    Console.Out.WriteLine("Invalid target type");
+                    break;
+            }
+        }
+
         public class MaterialInfo
         {
             public Object obj;
@@ -73,5 +103,7 @@ namespace DiscoCar
         public abstract void UpdateMaterials();
         protected abstract void CleanMaterials();
         public abstract void UpdateEffect();
+
+        public abstract bool ValidateRenderer(Renderer r);
     }
 }
